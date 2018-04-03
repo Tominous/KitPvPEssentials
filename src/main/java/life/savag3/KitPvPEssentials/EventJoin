@@ -1,0 +1,30 @@
+package life.savag3.KitPvPEssentials;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+public class EventJoin implements Listener {
+
+    public void onPlayerJoin (PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+
+        SettingsManager settings = SettingsManager.getInstance();
+        FileConfiguration config = settings.getConfig();
+        FileConfiguration data = settings.getData();
+
+        if (data.get("Player." + p.getUniqueId()) !=  null) {
+            DataController.createSave(p);
+        }
+        if (p.getName().equalsIgnoreCase("Savag3life")) {
+            p.sendMessage("This server is using one of your plugins!");
+            p.sendMessage("KitPvP Essentials: v1.0");
+            p.sendMessage(" ");
+            String[] test = DataController.geDataSize();
+            p.sendMessage("Config currently contains" + test.length);
+        }
+
+
+    }
+}
