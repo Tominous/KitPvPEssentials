@@ -1,0 +1,47 @@
+Settings:
+  DebugInConsle: true # Do you want this plugin to log debug messages in console? WARNING this adds alot of spam.
+  Lightning: true #Do you want lightning to spawn on the location where a player dies? This will add 2 hearts to the killer to stop them from dieing
+  DropItemsOnDeath: false #Do you want player to drop items when they die?
+  DeathMessage: #Do you want Death Messages to be handled by KitPvPEssentials?
+    Enabled: true # true or false;
+    Message: "&c&l%Killer% killed &d%Player% during Combat."
+  KillStreaks: # Kill Streaks!
+    Enabled: true #Enabled or naw
+    StopKillFarming:
+      Enabled: false
+      Threshold: 3 # How many times can you kill the same player, before we stop giving out free stuff?
+    AnnounceStreakEnd:
+      Enabled: true
+      MinAmountOfKills: 10
+      AnnounceMessage: "%killer% has ended %players% %steak% kill streak!"
+    Streaks: #Kill Streaks
+      '5': # 5 kill streak
+        Message: "&c%player%&f is now on a &c&l5 Player killstreak!" #Chat Message
+        enabled: true # Enabled true/false
+        commands: #Execute unlimited commands
+          - "eco give %player% 15"
+      '10': # 10 killstreak
+        Message: "&c%player%&f is now on a &c&l10 Player killstreak!"
+        enabled: false
+        commands:
+          - "eco give %player% 50"
+      '15': # 15 killstreak
+        Message: "%player% is now on a &c&l15 Player killstreak!"
+        enabled: true
+        commands:
+          - "eco give %player% 100"
+          - "cc give p Killer 1 %player%"
+  Groups:
+    VIP:
+      - "100, eco give %player% 1"
+      - "10, cc give p Killer 1 %player%"
+    VIP+:
+      - "30, eco give %player% 1"
+      - "11, cc give p Killer 1 %player%"
+  Messages:
+    Prefix:
+      Use: true
+      Prefix: "&e[PvPE]"
+    ConsoleReload: "KitPvP Essentials has been reloaded!"
+    InGameReload: "&aKitPvP Essentials has been reloaded!"
+
