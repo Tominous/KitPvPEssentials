@@ -1,7 +1,5 @@
 package life.savag3.KitPvPEssentials;
 
-
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,24 +13,19 @@ public class EventDeath implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
-
         SettingsManager settings = SettingsManager.getInstance();
         FileConfiguration config = settings.getConfig();
         FileConfiguration data = settings.getData();
-
         Player p = e.getEntity().getPlayer();
         Player k = p.getKiller();
         int rand;
         ConsoleCommandSender console = Bukkit.getConsoleSender();
-
-
         if (!data.contains("Players." + p.getUniqueId())) {
             DataController.createSave(p);
         }
         if (!data.contains("Players." + k.getUniqueId())) {
             DataController.createSave(k);
         }
-
         if (config.getBoolean("Settings.KillStreaks.AnnounceSteakEnd")) {
             if (DataController.getSteak(p) >= config.getInt("Settings.KillStreaks.AnnounceKillStreakEnd.MinAmountOfKills")) {
                 String msg = config.getString("Settings.KillStreaks.AnnounceKillStreakEnd.AnnounceMessage");
@@ -43,9 +36,7 @@ public class EventDeath implements Listener {
                 Bukkit.broadcastMessage(msg);
             }
         }
-
         data.set("Players." + p.getUniqueId() + ".killStreak", 0);
-
         //Lightning
         if (k.getHealth() > 10) {
             if (config.getBoolean("Settings.Lightning")) {
@@ -53,24 +44,22 @@ public class EventDeath implements Listener {
             }
         }
         //Commands onDeathEvent
-        String[] groups = config.getStringList("Settings.Group").toArray(new String[0]);
+        String[] groups = config.getStringList("Settings.Group").toArray(new String[10000]);
         String[] g = new String[0];
         for (int i = 0; i < groups.length; i++) {
             String groupname = "NAME." + groups[i];
-            g = config.getStringList("Settings.Group." + groups[i]).toArray(new String[0]);
-
+            g = config.getStringList("Settings.Group." + groups[i]).toArray(new String[10000]);
             if (!k.hasPermission("killrewards." + groups[i])) {
                 break;
             }
             if (k.hasPermission("killrewards" + groups[i])) {
-                String[] cmd = config.getStringList("Settings.Groups." + groups[i] + ".Commands").toArray(new String[0]);
+                String[] cmd = config.getStringList("Settings.Groups." + groups[i] + ".Commands").toArray(new String[10000]);
                 for (int x = 0; x < cmd.length; x++) {
                     if (!(cmd[x] == null)) {
                         String command = cmd[x];
                         String c;
                         int count = cmd.length;
                         String[] parts = command.split(",");
-
                         if (Integer.getInteger(parts[0]) >= 100) {
                             c = Methods.killerPH(parts[1], k);
                             c = Methods.playerPH(parts[1], p);
@@ -88,8 +77,6 @@ public class EventDeath implements Listener {
                             }
                         }
                     }
-
-
                     //Toggle Drops
                     if (config.getBoolean("Settings.DropItemsOnDeath")) {
                         if (config.getBoolean("Settings.DebugInConsole")) {
@@ -97,11 +84,9 @@ public class EventDeath implements Listener {
                         }
                         e.getDrops().clear();
                     }
-
                     //KillStreaks
                     boolean good = true;
                     if (config.getBoolean("Settings.KillStreaks.Enabled")) {
-
                         // Kill Farming Check
                         String[] d;
                         d = data.getString("Players." + k.getUniqueId() + "lastKills").split(",");
@@ -114,9 +99,7 @@ public class EventDeath implements Listener {
                             if (element.equalsIgnoreCase("word")) {
                                 count++;
                             }
-
                         }
-
                         if (count < config.getInt("Settings.KillStreaks.stopKillFarming.Threshold") - 1) {
                             if (config.getBoolean("Settings.DebugInConsole")) {
                                 Bukkit.getLogger().info("KitPvPEssentials: [DEBUG] Player was found not to be killfarming, continuing.");
@@ -138,29 +121,21 @@ public class EventDeath implements Listener {
                             if (config.getBoolean("Settings.DebugInConsole")) {
                                 Bukkit.getLogger().info("KitPvPEssentials: [DEBUG] Sending " + k.getName() + " their killstreak rewards.");
                             }
-
-                            
-
-
                         } else { // Cancelling Kill Farming.
                            k.sendMessage(Methods.color(config.getString("Settings.KillStreaks.stopKillFarming.CancelMessage")));
                         }
-
                     }
                     //Death Messages
                     if (config.getBoolean("Settings.DeathMessage.Enabled")) {
                         if (config.getBoolean("Settings.DebugInConsole")) {
                             Bukkit.getLogger().info("KitPvPEssentials: [DEBUG] Printing DeathMessage");
                         }
-
                         String b = config.getString("Settings.DeathMessage.Message");
                         b = Methods.killerPH(b, k);
                         b = Methods.playerPH(b, p);
                         b = Methods.streakPH(b, k);
                         Bukkit.broadcastMessage(b);
                     }
-
-
                 }
             }
         }
